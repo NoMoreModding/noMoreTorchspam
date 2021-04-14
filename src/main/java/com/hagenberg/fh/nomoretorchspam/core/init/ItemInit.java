@@ -1,6 +1,6 @@
 package com.hagenberg.fh.nomoretorchspam.core.init;
 
-import com.hagenberg.fh.nomoretorchspam.NoMoreTorchSpam;
+import com.hagenberg.fh.nomoretorchspam.nomoretorchspam;
 import net.minecraft.item.BlockItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemGroup;
@@ -11,7 +11,7 @@ import net.minecraftforge.registries.ForgeRegistries;
 public class ItemInit {
 
     public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, NoMoreTorchSpam.Mod_ID);
+            DeferredRegister.create(ForgeRegistries.ITEMS, nomoretorchspam.Mod_ID);
 
     // Block Items
     // TODO Make a Block Item

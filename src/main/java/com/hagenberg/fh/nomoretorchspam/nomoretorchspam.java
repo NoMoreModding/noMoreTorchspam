@@ -11,14 +11,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(NoMoreTorchSpam.Mod_ID)
-public class NoMoreTorchSpam
+@Mod(nomoretorchspam.Mod_ID)
+public class nomoretorchspam
 {
+    //CHNAGING SOMETHIGN TO TEST GIT
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String Mod_ID = "nomoretorchspam";
 
-    public NoMoreTorchSpam() {
+    public nomoretorchspam() {
         // Register the setup method for modloading
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
