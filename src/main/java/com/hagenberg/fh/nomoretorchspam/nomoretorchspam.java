@@ -16,12 +16,16 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+
 import java.util.stream.Collectors;
+
+//import static com.hagenberg.fh.nomoretorchspam.mod_blocks.BLOCKS;
 
 // The value here should match an entry in the META-INF/mods.toml file
 @Mod("nomoretorchspam")
 public class nomoretorchspam
 {
+    public static String MODID = "nomoretorchspam";
     //CHNAGING SOMETHIGN TO TEST GIT
     // Directly reference a log4j logger.
     private static final Logger LOGGER = LogManager.getLogger();
@@ -38,6 +42,8 @@ public class nomoretorchspam
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+        mod_blocks.BLOCKS.register(FMLJavaModLoadingContext.get().getModEventBus());
+        mod_items.ITEMS.register(FMLJavaModLoadingContext.get().getModEventBus());
     }
 
     private void setup(final FMLCommonSetupEvent event)

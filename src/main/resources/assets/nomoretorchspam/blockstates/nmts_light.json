@@ -1,0 +1,5 @@
+{
+  "variants": {
+    "": { "model": "nomoretorchspam:block/nmts_light" }
+  }
+}
