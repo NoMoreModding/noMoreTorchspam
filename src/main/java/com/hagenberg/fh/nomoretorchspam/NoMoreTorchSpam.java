@@ -1,5 +1,6 @@
 package com.hagenberg.fh.nomoretorchspam;
 
+import com.hagenberg.fh.nomoretorchspam.core.EvListener;
 import com.hagenberg.fh.nomoretorchspam.core.init.BlockInit;
 import com.hagenberg.fh.nomoretorchspam.core.init.ItemInit;
 import net.minecraftforge.common.MinecraftForge;
@@ -18,18 +19,23 @@ public class NoMoreTorchSpam
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String Mod_ID = "nomoretorchspam";
+    public static final boolean DEBUGMODE = true;
+
+
 
     public NoMoreTorchSpam() {
         // Register the setup method for modloading
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        bus.addListener(this::setup);
+        MinecraftForge.EVENT_BUS.register(new EvListener());
 
+        bus.addListener(this::setup);
         ItemInit.ITEMS.register(bus);
         BlockInit.BLOCKS.register(bus);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
     }
 
     private void setup(final FMLCommonSetupEvent event)

@@ -1,21 +1,30 @@
 package com.hagenberg.fh.nomoretorchspam.common.block;
 
+import com.hagenberg.fh.nomoretorchspam.NoMoreTorchSpam;
 import net.minecraft.block.Block;
-import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // This is the block class of GlowCrystal
 
 public class GlowCrystal extends Block {
 
-        public GlowCrystal(Properties properties){
+    public GlowCrystal(Properties properties) {
         super(properties);
+
+    }
+    //is called by EvListener when this has been placed
+    public static void placed() {
+        //TODO add placement of other blocks
+        if (NoMoreTorchSpam.DEBUGMODE) {
+            NoMoreTorchSpam.LOGGER.info("Glowcrystal was placed");
+        }
+    }
+    //is called by EvListener when this has been broken
+    public static void broken() {
+        // TODO add destruction of other blocks
+        if (NoMoreTorchSpam.DEBUGMODE) {
+            NoMoreTorchSpam.LOGGER.info("Glowcrystal was broken");
+        }
     }
 
-    @SubscribeEvent
-    public void onBlockPlace(BlockEvent.EntityPlaceEvent ev){
-            // TODO add other things that happen when block is placed
-    }
-    // TODO add what needs to be done when block is broken
 
 }
