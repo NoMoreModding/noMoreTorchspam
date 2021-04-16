@@ -15,7 +15,7 @@ import org.apache.logging.log4j.Logger;
 @Mod(NoMoreTorchSpam.Mod_ID)
 public class NoMoreTorchSpam
 {
-    //CHNAGING SOMETHIGN TO TEST GIT
+
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String Mod_ID = "nomoretorchspam";
