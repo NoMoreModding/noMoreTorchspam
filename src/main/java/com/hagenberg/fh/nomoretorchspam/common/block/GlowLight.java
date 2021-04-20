@@ -1,14 +1,33 @@
 package com.hagenberg.fh.nomoretorchspam.common.block;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockRenderType;
+import net.minecraft.block.BlockState;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.util.math.shapes.VoxelShapes;
+import net.minecraft.world.IBlockReader;
 
 public class GlowLight extends Block {
 
 
-    public GlowLight(Properties properties){
+    public GlowLight(Properties properties) {
         super(properties);
         properties.lightLevel(lightLevel -> 15);
-        //TODO add other properties and add Block.json, Item.json and BlockItem aswell as blockstates and lang
     }
 
+    //so funktioniert auch off MC-Air, ist also nicht wirklich deprecated
+    @Override
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+        return BlockRenderType.INVISIBLE;
+    }
+
+    //so funktioniert auch off MC-Air, ist also nicht wirklich deprecated
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return VoxelShapes.empty();
+    }
 }
+
+

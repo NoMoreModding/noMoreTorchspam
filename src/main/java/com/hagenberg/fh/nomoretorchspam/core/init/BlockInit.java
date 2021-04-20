@@ -16,12 +16,11 @@ public class BlockInit {
     public static final DeferredRegister<Block> BLOCKS =
             DeferredRegister.create(ForgeRegistries.BLOCKS, NoMoreTorchSpam.Mod_ID);
 
-    // TODO add the invisible light blocks
-    // TODO add some more Block Properties
     //This registers the block in the game
     public static final RegistryObject<GlowCrystal> GLOW_CRYSTAL = BLOCKS.register("glow_crystal",
             ()-> new GlowCrystal(AbstractBlock.Properties.of(Material.GLASS).sound(SoundType.GLASS)
                     .instabreak().dynamicShape().lightLevel(lightLevel ->15).noOcclusion()));
 
-    public static final RegistryObject<GlowLight> GLOW_LIGHT = BLOCKS.register("glow_light",()-> new GlowLight(AbstractBlock.Properties.of(Material.AIR)));
+    public static final RegistryObject<GlowLight> GLOW_LIGHT = BLOCKS.register("glow_light",
+            ()-> new GlowLight(AbstractBlock.Properties.of(Material.PLANT).lightLevel(lightLevel -> 15).noCollission()));
 }
