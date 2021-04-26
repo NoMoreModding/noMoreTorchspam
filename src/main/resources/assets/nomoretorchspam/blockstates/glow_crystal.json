@@ -1,5 +1,8 @@
 {
   "variants": {
-    "" : {"model" : "nomoretorchspam:block/glow_crystal"}
+    "crystals=1" : {"model" : "nomoretorchspam:block/glow_crystal_1"},
+    "crystals=2" : {"model" : "nomoretorchspam:block/glow_crystal_2"},
+    "crystals=3" : {"model" : "nomoretorchspam:block/glow_crystal_3"},
+    "crystals=4" : {"model" : "nomoretorchspam:block/glow_crystal_4"}
   }
 }
