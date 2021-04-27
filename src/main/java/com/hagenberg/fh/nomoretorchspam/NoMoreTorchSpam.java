@@ -3,6 +3,7 @@ package com.hagenberg.fh.nomoretorchspam;
 import com.hagenberg.fh.nomoretorchspam.core.EvListener;
 import com.hagenberg.fh.nomoretorchspam.core.init.BlockInit;
 import com.hagenberg.fh.nomoretorchspam.core.init.ItemInit;
+import com.hagenberg.fh.nomoretorchspam.core.init.TileEntityInit;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.common.Mod;

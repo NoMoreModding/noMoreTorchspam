@@ -22,5 +22,6 @@ public class BlockInit {
                     .instabreak().dynamicShape().lightLevel(lightLevel ->15).noOcclusion()));
 
     public static final RegistryObject<GlowLight> GLOW_LIGHT = BLOCKS.register("glow_light",
-            ()-> new GlowLight(AbstractBlock.Properties.of(Material.PLANT).lightLevel(lightLevel -> 15).noCollission()));
+            ()-> new GlowLight(AbstractBlock.Properties.of(Material.AIR).lightLevel(lightLevel -> 15).noCollission()));
+
 }
