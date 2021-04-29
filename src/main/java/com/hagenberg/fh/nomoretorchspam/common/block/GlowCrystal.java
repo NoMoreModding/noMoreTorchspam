@@ -29,9 +29,10 @@ import java.util.ArrayList;
 
 public class GlowCrystal extends Block  {
 
+    private final int HEIGHTDIFF = 5;
+    private final int RADIUSDIFF = 6;
 
-
-    private ArrayList<BlockPos> positions = new ArrayList<>();
+    private ArrayList<BlockPos> positions;
 
     //Blockstate that provides the number of crystals in the block
     public static final IntegerProperty CRYSTALS = IntegerProperty.create("crystals",1,4);
@@ -44,13 +45,13 @@ public class GlowCrystal extends Block  {
     @Override
     public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer,stack);
-
+        positions = new ArrayList<>();
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Glowcrystal was placed");
         }
 
         //saves the positions of the placed glowlights
-        createGlowlights(world, pos,12,3);
+        createGlowlights(world, pos, 6,4);
 
 
         //gets the tile Entity and sets the positions of Glowlights in it
@@ -86,7 +87,7 @@ public class GlowCrystal extends Block  {
     }
 
 
-    //sets the glowlights and inputs the positions into the tile Entity
+    //sets the glowlights and inputs the positions to the list for the tile entity
     private void createGlowlights(World world, BlockPos center, int radius, int height){
         int calcRadius = radius * radius + radius;
         if (NoMoreTorchSpam.DEBUGMODE) {
@@ -94,20 +95,19 @@ public class GlowCrystal extends Block  {
         }
         for(int z = -radius; z <= radius; z++){
             for(int x = - radius; x <= radius; x++){
-                for(int y = 0; y < height * 5; y += 5){
+                for(int y = center.getY()-HEIGHTDIFF < 0 ? 0 : -HEIGHTDIFF; y < height * HEIGHTDIFF; y += HEIGHTDIFF){
                     if(x*x+z*z < calcRadius ){
                         BlockPos pos = new BlockPos(x+center.getX(),y+center.getY(),z+center.getZ());
-                        BlockState blk = world.getBlockState(pos);
-                        if(isAir(blk)) {
-
+                        if(world.getBlockState(pos).getBlock() instanceof AirBlock) {
                             world.setBlock(pos, BlockInit.GLOW_LIGHT.get().defaultBlockState(), 0);
                             positions.add(pos);
+                            }
                         }
                     }
                 }
             }
         }
-    }
+
 
     private void destroyGlowlights(World world){
         if (NoMoreTorchSpam.DEBUGMODE) {
@@ -115,7 +115,7 @@ public class GlowCrystal extends Block  {
         }
         if(positions == null) return;
         for(BlockPos pos: positions){
-            if(world.getBlockState(pos).getBlock() instanceof GlowLight){
+            if(pos != null && world.getBlockState(pos).getBlock() instanceof GlowLight){
 
                 world.setBlock(pos,Blocks.AIR.defaultBlockState(),0);
             }

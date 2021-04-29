@@ -16,18 +16,18 @@ public class GlowLight extends Block {
         super(properties);
         properties.lightLevel(lightLevel -> 15);
     }
-/*
-    //so funktioniert auch off MC-Air, ist also nicht wirklich deprecated
+
+    @SuppressWarnings( "deprecation" )
     @Override
     public BlockRenderType getRenderShape(BlockState p_149645_1_) {
         return BlockRenderType.INVISIBLE;
     }
 
-    //so funktioniert auch off MC-Air, ist also nicht wirklich deprecated
+    @SuppressWarnings( "deprecation" )
     @Override
     public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
         return VoxelShapes.empty();
-    }*/
+    }
 }
 
 
