@@ -1,25 +1,37 @@
 package com.hagenberg.fh.nomoretorchspam.common.block;
 
 import com.hagenberg.fh.nomoretorchspam.NoMoreTorchSpam;
+import com.hagenberg.fh.nomoretorchspam.core.init.BlockInit;
 import com.hagenberg.fh.nomoretorchspam.tileentity.GlowCrystalTileEntity;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockState;
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.IWaterLoggable;
+import net.minecraft.block.*;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.ListNBT;
+import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.World;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeBlockState;
+import net.minecraftforge.common.util.Constants;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 
 // This is the block class of GlowCrystal
 
 public class GlowCrystal extends Block  {
+
+
+
+    private ArrayList<BlockPos> positions = new ArrayList<>();
 
     //Blockstate that provides the number of crystals in the block
     public static final IntegerProperty CRYSTALS = IntegerProperty.create("crystals",1,4);
@@ -28,20 +40,88 @@ public class GlowCrystal extends Block  {
         super(properties);
     }
 
-    //is called by EvListener when this has been placed
-    public static void placed() {
-        //TODO add placement of other blocks
+
+    @Override
+    public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
+        super.setPlacedBy(world, pos, state, placer,stack);
+
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Glowcrystal was placed");
         }
+
+        //saves the positions of the placed glowlights
+        createGlowlights(world, pos,12,3);
+
+
+        //gets the tile Entity and sets the positions of Glowlights in it
+        TileEntity te = world.getBlockEntity(pos);
+        if(te instanceof GlowCrystalTileEntity){
+            if (NoMoreTorchSpam.DEBUGMODE) {
+                NoMoreTorchSpam.LOGGER.info("Setting positions in tile entity");
+            }
+            GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
+            GlowTE.setBlockPositions(positions);
+            GlowTE.setChanged();
+        }
     }
-    //is called by EvListener when this has been broken
-    public static void broken() {
-        // TODO add destruction of other blocks
+
+    @Override
+    public void playerWillDestroy(World world, BlockPos pos, BlockState state, PlayerEntity player) {
+
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Glowcrystal was broken");
         }
+        TileEntity te = world.getBlockEntity(pos);
+        //gets the tile Entity and the positions of Glowlights in it
+        if(te instanceof GlowCrystalTileEntity){
+            if (NoMoreTorchSpam.DEBUGMODE) {
+                NoMoreTorchSpam.LOGGER.info("Getting positions in tile entity");
+            }
+            GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
+            positions = GlowTE.getBlockPositions();
+        }
+        destroyGlowlights(world);
+
+        super.playerWillDestroy(world, pos, state, player);
     }
+
+
+    //sets the glowlights and inputs the positions into the tile Entity
+    private void createGlowlights(World world, BlockPos center, int radius, int height){
+        int calcRadius = radius * radius + radius;
+        if (NoMoreTorchSpam.DEBUGMODE) {
+            NoMoreTorchSpam.LOGGER.info("Trying to place glowlights");
+        }
+        for(int z = -radius; z <= radius; z++){
+            for(int x = - radius; x <= radius; x++){
+                for(int y = 0; y < height * 5; y += 5){
+                    if(x*x+z*z < calcRadius ){
+                        BlockPos pos = new BlockPos(x+center.getX(),y+center.getY(),z+center.getZ());
+                        BlockState blk = world.getBlockState(pos);
+                        if(isAir(blk)) {
+
+                            world.setBlock(pos, BlockInit.GLOW_LIGHT.get().defaultBlockState(), 0);
+                            positions.add(pos);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private void destroyGlowlights(World world){
+        if (NoMoreTorchSpam.DEBUGMODE) {
+            NoMoreTorchSpam.LOGGER.info("Trying to destroy glowlights");
+        }
+        if(positions == null) return;
+        for(BlockPos pos: positions){
+            if(world.getBlockState(pos).getBlock() instanceof GlowLight){
+
+                world.setBlock(pos,Blocks.AIR.defaultBlockState(),0);
+            }
+        }
+    }
+
 
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
