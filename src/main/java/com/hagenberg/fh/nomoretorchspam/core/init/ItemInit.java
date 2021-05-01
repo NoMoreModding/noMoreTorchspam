@@ -14,10 +14,9 @@ public class ItemInit {
             DeferredRegister.create(ForgeRegistries.ITEMS, NoMoreTorchSpam.Mod_ID);
 
     // Block Items
-    // TODO Make a Block Item
     public static final RegistryObject<BlockItem> GLOW_CRYSTAL =
             ITEMS.register("glow_crystal", () -> new BlockItem(BlockInit.GLOW_CRYSTAL.get(),
-                    new Item.Properties().tab(ItemGroup.TAB_BUILDING_BLOCKS)));
+                    new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)));
 
     public static final RegistryObject<BlockItem> GLOW_LIGHT =
             ITEMS.register("glow_light", () -> new BlockItem(BlockInit.GLOW_LIGHT.get(),

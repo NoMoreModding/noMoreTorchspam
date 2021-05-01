@@ -38,8 +38,10 @@ import java.util.ArrayList;
 
 public class GlowCrystal extends Block  {
 
-    protected static final VoxelShape ONE_AABB = Block.box(6.0D, 0.0D, 5.0D, 11.0D, 16.0D, 10.0D);
-    protected static final VoxelShape TWO_AABB = Block.box(1.0D, 0.0D, 5.0D, 12.0D, 16.0D, 12.0D);
+    protected static final VoxelShape ONE_AABB = Block.box(5.0D, 0.0D, 5.0D, 10.0D, 16.0D, 10.0D);
+    protected static final VoxelShape TWO_AABB = Block.box(0.0D, 0.0D, 5.0D, 12.0D, 16.0D, 11.0D);
+    protected static final VoxelShape THREE_AABB = Block.box(0.0D, 0.0D, 4.0D, 13.0D, 16.0D, 15.0D);
+    protected static final VoxelShape FOUR_AABB = Block.box(0.0D, 0.0D, 2.0D, 13.0D, 16.0D, 15.0D);
 
     private final int HEIGHTDIFF = 5;
     private final int RADIUSDIFF = 6;
@@ -168,9 +170,14 @@ public class GlowCrystal extends Block  {
     public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext selectionContext) {
         switch(state.getValue(CRYSTALS)) {
             case 1:
-                return ONE_AABB;
             default:
+                return ONE_AABB;
+            case 2:
                 return TWO_AABB;
+            case 3:
+                return THREE_AABB;
+            case 4:
+                return FOUR_AABB;
 
         }
     }
