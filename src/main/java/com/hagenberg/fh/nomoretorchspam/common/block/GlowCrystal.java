@@ -6,6 +6,8 @@ import com.hagenberg.fh.nomoretorchspam.tileentity.GlowCrystalTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.fluid.FluidState;
+import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.ListNBT;
@@ -15,8 +17,12 @@ import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
 import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.shapes.ISelectionContext;
+import net.minecraft.util.math.shapes.VoxelShape;
 import net.minecraft.world.IBlockReader;
+import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeBlockState;
@@ -28,6 +34,9 @@ import java.util.ArrayList;
 // This is the block class of GlowCrystal
 
 public class GlowCrystal extends Block  {
+
+    protected static final VoxelShape ONE_AABB = Block.box(6.0D, 0.0D, 5.0D, 11.0D, 16.0D, 10.0D);
+    protected static final VoxelShape TWO_AABB = Block.box(1.0D, 0.0D, 5.0D, 12.0D, 16.0D, 12.0D);
 
     private final int HEIGHTDIFF = 5;
     private final int RADIUSDIFF = 6;
@@ -51,7 +60,7 @@ public class GlowCrystal extends Block  {
         }
 
         //saves the positions of the placed glowlights
-        createGlowlights(world, pos, 6,4);
+        createGlowlights(world, pos, 6* state.getValue(CRYSTALS),4);
 
 
         //gets the tile Entity and sets the positions of Glowlights in it
@@ -126,7 +135,7 @@ public class GlowCrystal extends Block  {
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(CRYSTALS);
-    }
+        }
 
     @Override
     public boolean hasTileEntity(BlockState state){
@@ -137,6 +146,42 @@ public class GlowCrystal extends Block  {
     @Override
     public TileEntity createTileEntity(BlockState state, IBlockReader world) {
         return new GlowCrystalTileEntity();
+    }
+
+
+    //handling different VoxelShapes
+
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        switch(p_220053_1_.getValue(CRYSTALS)) {
+            case 1:
+                return ONE_AABB;
+            default:
+                return TWO_AABB;
+
+        }
+    }
+
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public boolean canBeReplaced(BlockState p_196253_1_, BlockItemUseContext p_196253_2_) {
+        if (p_196253_2_.getItemInHand().getItem() == this.asItem() && p_196253_1_.getValue(CRYSTALS) < 4){
+            // Todo make destroyGlowlights() work here!;
+            return true;
+        } else {
+            return super.canBeReplaced(p_196253_1_, p_196253_2_);
+        }
+    }
+
+    @Nullable
+    public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
+        BlockState blockstate = p_196258_1_.getLevel().getBlockState(p_196258_1_.getClickedPos());
+        if (blockstate.is(this)) {
+            return blockstate.setValue(CRYSTALS, Integer.valueOf(Math.min(4, blockstate.getValue(CRYSTALS) + 1)));
+        } else {
+            return super.getStateForPlacement(p_196258_1_);
+        }
     }
 
 }
