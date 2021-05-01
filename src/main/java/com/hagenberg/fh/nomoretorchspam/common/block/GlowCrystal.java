@@ -21,14 +21,17 @@ import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
+import net.minecraft.world.Dimension;
 import net.minecraft.world.IBlockReader;
 import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.extensions.IForgeBlockState;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 // This is the block class of GlowCrystal
@@ -40,8 +43,8 @@ public class GlowCrystal extends Block  {
 
     private final int HEIGHTDIFF = 5;
     private final int RADIUSDIFF = 6;
+    private final int AMOUNTOFDISCS = 3;
 
-    private ArrayList<BlockPos> positions;
 
     //Blockstate that provides the number of crystals in the block
     public static final IntegerProperty CRYSTALS = IntegerProperty.create("crystals",1,4);
@@ -50,54 +53,60 @@ public class GlowCrystal extends Block  {
         super(properties);
     }
 
-
     @Override
     public void setPlacedBy(World world, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack stack) {
         super.setPlacedBy(world, pos, state, placer,stack);
-        positions = new ArrayList<>();
+
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Glowcrystal was placed");
         }
 
         //saves the positions of the placed glowlights
-        createGlowlights(world, pos, 6* state.getValue(CRYSTALS),4);
+        ArrayList <BlockPos> positions = createGlowlights(world, pos, RADIUSDIFF * state.getValue(CRYSTALS), AMOUNTOFDISCS);
 
 
         //gets the tile Entity and sets the positions of Glowlights in it
         TileEntity te = world.getBlockEntity(pos);
-        if(te instanceof GlowCrystalTileEntity){
+        if (te instanceof GlowCrystalTileEntity) {
             if (NoMoreTorchSpam.DEBUGMODE) {
                 NoMoreTorchSpam.LOGGER.info("Setting positions in tile entity");
             }
             GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
             GlowTE.setBlockPositions(positions);
-            GlowTE.setChanged();
+
+            world.sendBlockUpdated(pos, state, state, 2);
         }
     }
 
     @Override
     public void playerWillDestroy(World world, BlockPos pos, BlockState state, PlayerEntity player) {
 
+
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Glowcrystal was broken");
         }
+
         TileEntity te = world.getBlockEntity(pos);
         //gets the tile Entity and the positions of Glowlights in it
-        if(te instanceof GlowCrystalTileEntity){
+        if (te instanceof GlowCrystalTileEntity) {
             if (NoMoreTorchSpam.DEBUGMODE) {
                 NoMoreTorchSpam.LOGGER.info("Getting positions in tile entity");
             }
             GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
-            positions = GlowTE.getBlockPositions();
-        }
-        destroyGlowlights(world);
+            ArrayList <BlockPos> positions = GlowTE.getBlockPositions();
 
-        super.playerWillDestroy(world, pos, state, player);
+            destroyGlowlights(world,positions);
+        }
+
+            super.playerWillDestroy(world, pos, state, player);
+
     }
 
 
     //sets the glowlights and inputs the positions to the list for the tile entity
-    private void createGlowlights(World world, BlockPos center, int radius, int height){
+    private ArrayList<BlockPos> createGlowlights(World world, BlockPos center, int radius, int height){
+
+        ArrayList<BlockPos> positions = new ArrayList<>();
         int calcRadius = radius * radius + radius;
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Trying to place glowlights");
@@ -115,17 +124,20 @@ public class GlowCrystal extends Block  {
                     }
                 }
             }
+        return positions;
         }
 
 
-    private void destroyGlowlights(World world){
+    private void destroyGlowlights(World world, ArrayList<BlockPos> positions){
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Trying to destroy glowlights");
         }
-        if(positions == null) return;
+        if(positions == null ||positions.size() == 0) {NoMoreTorchSpam.LOGGER.error("NO POSITIONS FOUND"); return;}
         for(BlockPos pos: positions){
             if(pos != null && world.getBlockState(pos).getBlock() instanceof GlowLight){
-
+                if(world.isClientSide){
+                    LOGGER.info(pos.toShortString());
+                }
                 world.setBlock(pos,Blocks.AIR.defaultBlockState(),0);
             }
         }
@@ -153,8 +165,8 @@ public class GlowCrystal extends Block  {
 
     @SuppressWarnings( "deprecation" )
     @Override
-    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-        switch(p_220053_1_.getValue(CRYSTALS)) {
+    public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext selectionContext) {
+        switch(state.getValue(CRYSTALS)) {
             case 1:
                 return ONE_AABB;
             default:
@@ -165,22 +177,34 @@ public class GlowCrystal extends Block  {
 
     @SuppressWarnings( "deprecation" )
     @Override
-    public boolean canBeReplaced(BlockState p_196253_1_, BlockItemUseContext p_196253_2_) {
-        if (p_196253_2_.getItemInHand().getItem() == this.asItem() && p_196253_1_.getValue(CRYSTALS) < 4){
-            // Todo make destroyGlowlights() work here!;
+    public boolean canBeReplaced(BlockState state, BlockItemUseContext ctx) {
+        if (ctx.getItemInHand().getItem() == this.asItem() && state.getValue(CRYSTALS) < 4){
+            World world = ctx.getLevel();
+
+            TileEntity te = world.getBlockEntity(ctx.getClickedPos());
+            //gets the tile Entity and the positions of Glowlights in it
+            if (te instanceof GlowCrystalTileEntity) {
+                if (NoMoreTorchSpam.DEBUGMODE) {
+                    NoMoreTorchSpam.LOGGER.info("Getting positions in tile entity");
+                }
+                GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
+                ArrayList <BlockPos> positions = GlowTE.getBlockPositions();
+
+                destroyGlowlights(world,positions);
+            }
             return true;
         } else {
-            return super.canBeReplaced(p_196253_1_, p_196253_2_);
+            return super.canBeReplaced(state, ctx);
         }
     }
 
     @Nullable
-    public BlockState getStateForPlacement(BlockItemUseContext p_196258_1_) {
-        BlockState blockstate = p_196258_1_.getLevel().getBlockState(p_196258_1_.getClickedPos());
+    public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+        BlockState blockstate = ctx.getLevel().getBlockState(ctx.getClickedPos());
         if (blockstate.is(this)) {
             return blockstate.setValue(CRYSTALS, Integer.valueOf(Math.min(4, blockstate.getValue(CRYSTALS) + 1)));
         } else {
-            return super.getStateForPlacement(p_196258_1_);
+            return super.getStateForPlacement(ctx);
         }
     }
 

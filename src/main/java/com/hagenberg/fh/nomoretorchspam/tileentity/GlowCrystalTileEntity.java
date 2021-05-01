@@ -4,11 +4,16 @@ import com.hagenberg.fh.nomoretorchspam.NoMoreTorchSpam;
 import com.hagenberg.fh.nomoretorchspam.core.init.TileEntityInit;
 import net.minecraft.block.BlockState;
 import net.minecraft.nbt.*;
+import net.minecraft.network.NetworkManager;
+import net.minecraft.network.play.server.SUpdateTileEntityPacket;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraft.util.math.BlockPos;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.util.Constants;
+import net.minecraftforge.fml.DistExecutor;
 
+import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 public class GlowCrystalTileEntity extends TileEntity {
@@ -30,48 +35,53 @@ public class GlowCrystalTileEntity extends TileEntity {
         return positions;
     }
 
+    @Nullable
     @Override
-    public CompoundNBT getUpdateTag() {
-        CompoundNBT tag = new CompoundNBT();
-        save(tag);
-        return tag;
+    public SUpdateTileEntityPacket getUpdatePacket() {
+        CompoundNBT nbtTag = new CompoundNBT();
+        save(nbtTag);
+        return new SUpdateTileEntityPacket(this.getBlockPos(),-1,nbtTag);
     }
 
     @Override
-    public void handleUpdateTag(BlockState state, CompoundNBT tag) {
-        this.load(state,tag);
+    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
+        loadingOperation(pkt.getTag());
     }
 
     @Override
     public CompoundNBT save(CompoundNBT compound) {
         super.save(compound);
-        if (NoMoreTorchSpam.DEBUGMODE) {
-            NoMoreTorchSpam.LOGGER.info("Saving to compound");
-        }
-        //saves the pos in an NBT list
-        ListNBT posList = new ListNBT();
-        for(BlockPos pos : positions){
-
-            posList.add(NBTUtil.writeBlockPos(pos));
-        }
-
-        //saves NBT list into the compound
-        compound.put(pL,posList);
-        return compound;
+        return(savingOperation(compound,positions));
     }
 
 
     @Override
     public void load(BlockState blockState, CompoundNBT compound) {
-        if (NoMoreTorchSpam.DEBUGMODE) {
-            NoMoreTorchSpam.LOGGER.info("Reading from compound");
-        }
         super.load(blockState, compound);
+
+        loadingOperation(compound);
+    }
+
+    private void loadingOperation(CompoundNBT nbt){
         ArrayList<BlockPos> positions = new ArrayList<>();
-        ListNBT list = compound.getList(pL, Constants.NBT.TAG_COMPOUND);
+        ListNBT list = nbt.getList(pL, Constants.NBT.TAG_COMPOUND);
         for(int i = 0; i < list.size(); i++){
             positions.add(NBTUtil.readBlockPos(list.getCompound(i)));
         }
         this.positions = positions;
     }
+
+    private CompoundNBT savingOperation(CompoundNBT nbt, ArrayList<BlockPos> positions){
+        if(positions != null) {
+            ListNBT posList = new ListNBT();
+            for (BlockPos pos : positions) {
+                posList.add(NBTUtil.writeBlockPos(pos != null ? pos : new BlockPos(0,0,0)));
+            }
+            NoMoreTorchSpam.LOGGER.info("Did Saving OP");
+            nbt.put(pL, posList);
+        }
+        return nbt;
+    }
+
+
 }
