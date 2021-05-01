@@ -6,32 +6,18 @@ import com.hagenberg.fh.nomoretorchspam.tileentity.GlowCrystalTileEntity;
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.fluid.FluidState;
-import net.minecraft.fluid.Fluids;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.ListNBT;
-import net.minecraft.nbt.NBTUtil;
 import net.minecraft.state.IntegerProperty;
-import net.minecraft.state.Property;
 import net.minecraft.state.StateContainer;
-import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.Direction;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
-import net.minecraft.world.Dimension;
 import net.minecraft.world.IBlockReader;
-import net.minecraft.world.IWorld;
 import net.minecraft.world.World;
-import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.extensions.IForgeBlockState;
-import net.minecraftforge.common.util.Constants;
-import net.minecraftforge.fml.DistExecutor;
 
 import javax.annotation.Nullable;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 // This is the block class of GlowCrystal
@@ -46,6 +32,7 @@ public class GlowCrystal extends Block  {
     private final int HEIGHTDIFF = 5;
     private final int RADIUSDIFF = 6;
     private final int AMOUNTOFDISCS = 3;
+    private final int DISTANCE = 3;
 
 
     //Blockstate that provides the number of crystals in the block
@@ -62,21 +49,22 @@ public class GlowCrystal extends Block  {
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Glowcrystal was placed");
         }
+        if(!world.isClientSide){
+            //saves the positions of the placed glowlights
+            ArrayList <BlockPos> positions = createGlowlights(world, pos, RADIUSDIFF * state.getValue(CRYSTALS), AMOUNTOFDISCS);
 
-        //saves the positions of the placed glowlights
-        ArrayList <BlockPos> positions = createGlowlights(world, pos, RADIUSDIFF * state.getValue(CRYSTALS), AMOUNTOFDISCS);
 
+            //gets the tile Entity and sets the positions of Glowlights in it
+            TileEntity te = world.getBlockEntity(pos);
+            if (te instanceof GlowCrystalTileEntity) {
+                if (NoMoreTorchSpam.DEBUGMODE) {
+                    NoMoreTorchSpam.LOGGER.info("Setting positions in tile entity");
+                }
+                GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
+                GlowTE.setBlockPositions(positions);
 
-        //gets the tile Entity and sets the positions of Glowlights in it
-        TileEntity te = world.getBlockEntity(pos);
-        if (te instanceof GlowCrystalTileEntity) {
-            if (NoMoreTorchSpam.DEBUGMODE) {
-                NoMoreTorchSpam.LOGGER.info("Setting positions in tile entity");
+                world.sendBlockUpdated(pos, state, state, 2);
             }
-            GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
-            GlowTE.setBlockPositions(positions);
-
-            world.sendBlockUpdated(pos, state, state, 2);
         }
     }
 
@@ -87,17 +75,19 @@ public class GlowCrystal extends Block  {
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Glowcrystal was broken");
         }
+        if(!world.isClientSide) {
 
-        TileEntity te = world.getBlockEntity(pos);
-        //gets the tile Entity and the positions of Glowlights in it
-        if (te instanceof GlowCrystalTileEntity) {
-            if (NoMoreTorchSpam.DEBUGMODE) {
-                NoMoreTorchSpam.LOGGER.info("Getting positions in tile entity");
+            TileEntity te = world.getBlockEntity(pos);
+            //gets the tile Entity and the positions of Glowlights in it
+            if (te instanceof GlowCrystalTileEntity) {
+                if (NoMoreTorchSpam.DEBUGMODE) {
+                    NoMoreTorchSpam.LOGGER.info("Getting positions in tile entity");
+                }
+                GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
+                ArrayList<BlockPos> positions = GlowTE.getBlockPositions();
+
+                destroyGlowlights(world, positions);
             }
-            GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
-            ArrayList <BlockPos> positions = GlowTE.getBlockPositions();
-
-            destroyGlowlights(world,positions);
         }
 
             super.playerWillDestroy(world, pos, state, player);
@@ -116,10 +106,10 @@ public class GlowCrystal extends Block  {
         for(int z = -radius; z <= radius; z++){
             for(int x = - radius; x <= radius; x++){
                 for(int y = center.getY()-HEIGHTDIFF < 0 ? 0 : -HEIGHTDIFF; y < height * HEIGHTDIFF; y += HEIGHTDIFF){
-                    if(x*x+z*z < calcRadius ){
+                    if(x*x+z*z < calcRadius && z % DISTANCE == 0 && x % DISTANCE == 0){
                         BlockPos pos = new BlockPos(x+center.getX(),y+center.getY(),z+center.getZ());
                         if(world.getBlockState(pos).getBlock() instanceof AirBlock) {
-                            world.setBlock(pos, BlockInit.GLOW_LIGHT.get().defaultBlockState(), 0);
+                            world.setBlock(pos, BlockInit.GLOW_LIGHT.get().defaultBlockState(), 3,0);
                             positions.add(pos);
                             }
                         }
@@ -140,7 +130,7 @@ public class GlowCrystal extends Block  {
                 if(world.isClientSide){
                     LOGGER.info(pos.toShortString());
                 }
-                world.setBlock(pos,Blocks.AIR.defaultBlockState(),0);
+                world.setBlock(pos,Blocks.AIR.defaultBlockState(),3,0);
             }
         }
     }
