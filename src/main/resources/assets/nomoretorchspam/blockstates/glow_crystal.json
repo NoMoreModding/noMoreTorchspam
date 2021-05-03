@@ -1,20 +1,8 @@
 {
   "variants": {
-    "crystals=1" : [{"model" : "nomoretorchspam:block/glow_crystal_1"},
-                    {"model" : "nomoretorchspam:block/glow_crystal_1","y": 90},
-                    {"model" : "nomoretorchspam:block/glow_crystal_1","y": 180},
-                    {"model" : "nomoretorchspam:block/glow_crystal_1","y": 270}],
-    "crystals=2" : [{"model" : "nomoretorchspam:block/glow_crystal_2"},
-                    {"model" : "nomoretorchspam:block/glow_crystal_2","y": 90},
-                    {"model" : "nomoretorchspam:block/glow_crystal_2","y": 180},
-                    {"model" : "nomoretorchspam:block/glow_crystal_2","y": 270}],
-    "crystals=3" : [{"model" : "nomoretorchspam:block/glow_crystal_3"},
-                    {"model" : "nomoretorchspam:block/glow_crystal_3","y": 90},
-                    {"model" : "nomoretorchspam:block/glow_crystal_3","y": 180},
-                    {"model" : "nomoretorchspam:block/glow_crystal_3","y": 270}],
-    "crystals=4" : [{"model" : "nomoretorchspam:block/glow_crystal_4"},
-                    {"model" : "nomoretorchspam:block/glow_crystal_4","y": 90},
-                    {"model" : "nomoretorchspam:block/glow_crystal_4","y": 180},
-                    {"model" : "nomoretorchspam:block/glow_crystal_4","y": 270}]
+    "crystals=1" : {"model" : "nomoretorchspam:block/glow_crystal_1"},
+    "crystals=2" : {"model" : "nomoretorchspam:block/glow_crystal_2"},
+    "crystals=3" : {"model" : "nomoretorchspam:block/glow_crystal_3"},
+    "crystals=4" : {"model" : "nomoretorchspam:block/glow_crystal_4"}
   }
 }
