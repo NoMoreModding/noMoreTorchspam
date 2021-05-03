@@ -12,4 +12,4 @@ You can place up to 4 crystals at once to get the maximum light range!
 
 ## Crafting
 
-![GitHub Logo](/src/main/resources/crafting.png)
+![GitHub Logo](/src/main/resources/crafting.PNG)
