@@ -11,7 +11,7 @@ logoFile="logo.png"
 credits="Thanks to Wolfgang Hochleitner and Michael Lankes"
 authors="Tobias Filler, Lukas Hartinger"
 description='''
-A small mod that adds the Glow Crystal, a crystal that is a scalable light sources. As it is a single block, it prevents the use of tons of torches, making the world look more beatutiful. :) '''
+A small mod that adds the Glow Crystal, a scalable light source. As it is a single block, it prevents the use of tons of torches, improving the look of your Minecraft World. :) '''
 
 [[dependencies.nomoretorchspam]]
 modId="forge"

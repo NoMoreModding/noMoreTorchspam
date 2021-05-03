@@ -2,11 +2,11 @@
 
 # No more Torch Spam
 
-A small mod that adds the Glow Crystal, a crystal that is a scalable light sources.
+A small mod that adds the Glow Crystal, a scalable light source.
 Have you ever wanted to light up a lager area?
-Bevor this mod you would probably spam torches all over
+Before this mod you would probably spam torches all over
 but spam no more!
-The glow crystal will save you :D
+The glow crystal will save you :3
 
 You can place up to 4 crystals at once to get the maximum light range!
 
