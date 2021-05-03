@@ -17,17 +17,17 @@ public class GlowLight extends Block {
         properties.lightLevel(lightLevel -> 15);
     }
 
-//    @SuppressWarnings( "deprecation" )
-//    @Override
-//    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
-//        return BlockRenderType.INVISIBLE;
-//    }
-//
-//    @SuppressWarnings( "deprecation" )
-//    @Override
-//    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
-//        return VoxelShapes.empty();
-//    }
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public BlockRenderType getRenderShape(BlockState p_149645_1_) {
+        return BlockRenderType.INVISIBLE;
+    }
+
+    @SuppressWarnings( "deprecation" )
+    @Override
+    public VoxelShape getShape(BlockState p_220053_1_, IBlockReader p_220053_2_, BlockPos p_220053_3_, ISelectionContext p_220053_4_) {
+        return VoxelShapes.empty();
+    }
 
 
 }
