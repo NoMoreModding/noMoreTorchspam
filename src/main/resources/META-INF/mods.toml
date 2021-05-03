@@ -1,7 +1,7 @@
 modLoader="javafml"
-loaderVersion="[36,)
+loaderVersion="[36,)"
 # Review your options at https://choosealicense.com/
-license="All rights reserved or MIT dk"
+license="MIT"
 
 [[mods]]
 modId="nomoretorchspam"
@@ -11,17 +11,17 @@ logoFile="logo.png"
 credits="Thanks to Wolfgang Hochleitner and Michael Lankes"
 authors="Tobias Filler, Lukas Hartinger"
 description='''
-This mod is supposed to create a lightsource which can be used by players to light up large areas. As it is a single block, it prevents the use of tons of torches, making the world look more beatutiful. :) '''
+A small mod that adds the Glow Crystal, a crystal that is a scalable light sources. As it is a single block, it prevents the use of tons of torches, making the world look more beatutiful. :) '''
 
 [[dependencies.nomoretorchspam]]
-    modId="forge"
-    mandatory=true
-    versionRange="[36,)"
-    ordering="NONE"
-    side="BOTH"
+modId="forge"
+mandatory=true
+versionRange="[36,)"
+ordering="NONE"
+side="BOTH"
 [[dependencies.nomoretorchspam]]
-    modId="minecraft"
-    mandatory=true
-    versionRange="[1.16.5,1.17)"
-    ordering="NONE"
-    side="BOTH"
+modId="minecraft"
+mandatory=true
+versionRange="[1.16.5,1.17)"
+ordering="NONE"
+side="BOTH"
