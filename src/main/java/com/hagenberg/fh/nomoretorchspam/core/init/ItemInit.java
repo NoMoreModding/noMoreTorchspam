@@ -18,7 +18,7 @@ public class ItemInit {
             ITEMS.register("glow_crystal", () -> new BlockItem(BlockInit.GLOW_CRYSTAL.get(),
                     new Item.Properties().tab(ItemGroup.TAB_DECORATIONS)));
 
-    public static final RegistryObject<BlockItem> GLOW_LIGHT =
-            ITEMS.register("glow_light", () -> new BlockItem(BlockInit.GLOW_LIGHT.get(),
-                    new Item.Properties().tab(ItemGroup.TAB_BUILDING_BLOCKS)));
+//    public static final RegistryObject<BlockItem> GLOW_LIGHT =
+//            ITEMS.register("glow_light", () -> new BlockItem(BlockInit.GLOW_LIGHT.get(),
+//                    new Item.Properties().tab(ItemGroup.TAB_BUILDING_BLOCKS)));
 }

@@ -23,7 +23,7 @@ public class NoMoreTorchSpam
     // Directly reference a log4j logger.
     public static final Logger LOGGER = LogManager.getLogger();
     public static final String Mod_ID = "nomoretorchspam";
-    public static final boolean DEBUGMODE = true;
+    public static final boolean DEBUGMODE = false;
 
 
 
