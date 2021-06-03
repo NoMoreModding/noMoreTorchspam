@@ -1,9 +1,9 @@
 package com.hagenberg.fh.nomoretorchspam;
 
+import com.hagenberg.fh.nomoretorchspam.config.Config;
 import com.hagenberg.fh.nomoretorchspam.core.init.BlockInit;
 import com.hagenberg.fh.nomoretorchspam.core.init.ItemInit;
 import com.hagenberg.fh.nomoretorchspam.core.init.TileEntityInit;
-import config.Config;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -31,9 +31,9 @@ public class NoMoreTorchSpam
         // Register the setup method for modloading
         IEventBus bus = FMLJavaModLoadingContext.get().getModEventBus();
 
-        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.config);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, Config.COMMEN_CONFIG);
 
-        Config.loadConfig(Config.config, FMLPaths.CONFIGDIR.get().resolve("nomoretorchspam-config.toml").toString());
+        Config.setup(FMLPaths.CONFIGDIR.get().resolve(Mod_ID + ".toml"));
 
         bus.addListener(this::setup);
         ItemInit.ITEMS.register(bus);

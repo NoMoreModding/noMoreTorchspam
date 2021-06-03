@@ -1,9 +1,10 @@
 package com.hagenberg.fh.nomoretorchspam.common.block;
 
 import com.hagenberg.fh.nomoretorchspam.NoMoreTorchSpam;
+import com.hagenberg.fh.nomoretorchspam.config.Config;
 import com.hagenberg.fh.nomoretorchspam.core.init.BlockInit;
 import com.hagenberg.fh.nomoretorchspam.tileentity.GlowCrystalTileEntity;
-import config.GlowCrystalConfig;
+
 import net.minecraft.block.*;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
@@ -30,10 +31,10 @@ public class GlowCrystal extends Block  {
     protected static final VoxelShape THREE_AABB = Block.box(0.0D, 0.0D, 4.0D, 13.0D, 16.0D, 15.0D);
     protected static final VoxelShape FOUR_AABB = Block.box(0.0D, 0.0D, 2.0D, 13.0D, 16.0D, 15.0D);
 
-    private final int HEIGHTDIFF = GlowCrystalConfig.HEIGHTDIFF.get();
-    private final int RADIUSDIFF = GlowCrystalConfig.RADIUSDIFF.get();
-    private final int AMOUNTOFDISCS = GlowCrystalConfig.AMOUNTOFDISCS.get();
-    private final int DISTANCE = GlowCrystalConfig.DISTANCE.get();
+    private final int HEIGHTDIFF = Config.HEIGHTDIFF.get();
+    private final int RADIUSDIFF = Config.RADIUSDIFF.get();
+    private final int AMOUNTOFDISCS = Config.AMOUNTOFDISCS.get();
+    private final int DISTANCE = Config.DISTANCE.get();
 
 
     //Blockstate that provides the number of crystals in the block
