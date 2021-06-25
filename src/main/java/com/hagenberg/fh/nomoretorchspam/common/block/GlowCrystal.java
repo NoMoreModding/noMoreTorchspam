@@ -10,9 +10,15 @@ import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.pathfinding.PathType;
+import net.minecraft.state.DirectionProperty;
 import net.minecraft.state.IntegerProperty;
 import net.minecraft.state.StateContainer;
+import net.minecraft.state.properties.BlockStateProperties;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.Direction;
+import net.minecraft.util.Mirror;
+import net.minecraft.util.Rotation;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.shapes.ISelectionContext;
 import net.minecraft.util.math.shapes.VoxelShape;
@@ -26,10 +32,26 @@ import java.util.ArrayList;
 
 public class GlowCrystal extends Block  {
 
-    protected static final VoxelShape ONE_AABB = Block.box(5.0D, 0.0D, 5.0D, 10.0D, 16.0D, 10.0D);
-    protected static final VoxelShape TWO_AABB = Block.box(0.0D, 0.0D, 5.0D, 12.0D, 16.0D, 11.0D);
-    protected static final VoxelShape THREE_AABB = Block.box(0.0D, 0.0D, 4.0D, 13.0D, 16.0D, 15.0D);
-    protected static final VoxelShape FOUR_AABB = Block.box(0.0D, 0.0D, 2.0D, 13.0D, 16.0D, 15.0D);
+    //VoxelShapes :)
+    //One
+    protected static final VoxelShape Y_ONE_AABB = Block.box(5.0D, 0.0D, 5.0D, 10.0D, 16.0D, 10.0D);
+    protected static final VoxelShape Z_ONE_AABB = Block.box(5.0D, 5.0D, 0.0D, 10.0D, 10.0D, 16.0D);
+    protected static final VoxelShape X_ONE_AABB = Block.box(0.0D, 5.0D, 5.0D, 16.0D, 10.0D, 10.0D);
+
+    //Two
+    protected static final VoxelShape Y_TWO_AABB = Block.box(0.0D, 0.0D, 5.0D, 12.0D, 16.0D, 11.0D);
+    protected static final VoxelShape Z_TWO_AABB = Block.box(5.0D, 0.0D, 0.0D, 11.0D, 12.0D, 16.0D);
+    protected static final VoxelShape X_TWO_AABB = Block.box(0.0D, 5.0D, 0.0D, 16.0D, 11.0D, 12.0D);
+
+    //Three
+    protected static final VoxelShape Y_THREE_AABB = Block.box(0.0D, 0.0D, 4.0D, 13.0D, 16.0D, 15.0D);
+    protected static final VoxelShape Z_THREE_AABB = Block.box(4.0D, 0.0D, 0.0D, 15.0D, 13.0D, 16.0D);
+    protected static final VoxelShape X_THREE_AABB = Block.box(0.0D, 4.0D, 0.0D, 16.0D, 15.0D, 13.0D);
+
+    //Four
+    protected static final VoxelShape Y_FOUR_AABB = Block.box(0.0D, 0.0D, 2.0D, 13.0D, 16.0D, 15.0D);
+    protected static final VoxelShape Z_FOUR_AABB = Block.box(2.0D, 0.0D, 0.0D, 15.0D, 13.0D, 16.0D);
+    protected static final VoxelShape X_FOUR_AABB = Block.box(0.0D, 2.0D, 0.0D, 16.0D, 15.0D, 13.0D);
 
     private final int HEIGHTDIFF = Config.HEIGHTDIFF.get();
     private final int RADIUSDIFF = Config.RADIUSDIFF.get();
@@ -39,9 +61,11 @@ public class GlowCrystal extends Block  {
 
     //Blockstate that provides the number of crystals in the block
     public static final IntegerProperty CRYSTALS = IntegerProperty.create("crystals",1,4);
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
     public GlowCrystal(Properties properties) {
         super(properties);
+        this.registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.UP));
     }
 
     @Override
@@ -144,6 +168,7 @@ public class GlowCrystal extends Block  {
     @Override
     protected void createBlockStateDefinition(StateContainer.Builder<Block, BlockState> builder) {
         builder.add(CRYSTALS);
+        builder.add(FACING);
         }
 
     @Override
@@ -163,16 +188,50 @@ public class GlowCrystal extends Block  {
     @SuppressWarnings( "deprecation" )
     @Override
     public VoxelShape getShape(BlockState state, IBlockReader reader, BlockPos pos, ISelectionContext selectionContext) {
+        Direction.Axis axis = state.getValue(FACING).getAxis();
+
         switch(state.getValue(CRYSTALS)) {
             case 1:
             default:
-                return ONE_AABB;
+                switch(axis) {
+                    case X:
+                    default:
+                        return X_ONE_AABB;
+                    case Z:
+                        return Z_ONE_AABB;
+                    case Y:
+                        return Y_ONE_AABB;
+                }
             case 2:
-                return TWO_AABB;
+                switch(axis) {
+                    case X:
+                    default:
+                        return X_TWO_AABB;
+                    case Z:
+                        return Z_TWO_AABB;
+                    case Y:
+                        return Y_TWO_AABB;
+                }
             case 3:
-                return THREE_AABB;
+                switch(axis) {
+                    case X:
+                    default:
+                        return X_THREE_AABB;
+                    case Z:
+                        return Z_THREE_AABB;
+                    case Y:
+                        return Y_THREE_AABB;
+                }
             case 4:
-                return FOUR_AABB;
+                switch(axis) {
+                    case X:
+                    default:
+                        return X_FOUR_AABB;
+                    case Z:
+                        return Z_FOUR_AABB;
+                    case Y:
+                        return Y_FOUR_AABB;
+                }
 
         }
     }
@@ -202,12 +261,29 @@ public class GlowCrystal extends Block  {
 
     @Nullable
     public BlockState getStateForPlacement(BlockItemUseContext ctx) {
+        Direction direction = ctx.getClickedFace();
         BlockState blockstate = ctx.getLevel().getBlockState(ctx.getClickedPos());
+
         if (blockstate.is(this)) {
             return blockstate.setValue(CRYSTALS, Integer.valueOf(Math.min(4, blockstate.getValue(CRYSTALS) + 1)));
         } else {
-            return super.getStateForPlacement(ctx);
+            return this.defaultBlockState().setValue(FACING, direction);
         }
+    }
+
+    @SuppressWarnings( "deprecation" )
+    public boolean isPathfindable(BlockState p_196266_1_, IBlockReader p_196266_2_, BlockPos p_196266_3_, PathType p_196266_4_) {
+        return false;
+    }
+
+    @SuppressWarnings( "deprecation" )
+    public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
+        return p_185499_1_.setValue(FACING, p_185499_2_.rotate(p_185499_1_.getValue(FACING)));
+    }
+
+    @SuppressWarnings( "deprecation" )
+    public BlockState mirror(BlockState p_185471_1_, Mirror p_185471_2_) {
+        return p_185471_1_.setValue(FACING, p_185471_2_.mirror(p_185471_1_.getValue(FACING)));
     }
 
 }

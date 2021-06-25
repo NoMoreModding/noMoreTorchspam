@@ -5,7 +5,7 @@ license="MIT"
 
 [[mods]]
 modId="nomoretorchspam"
-version= "1.16.5-1.0.1-beta"
+version= "1.16.5-1.0.2-beta"
 displayName="No More Torch Spam"
 logoFile="logo.png"
 credits="Thanks to Wolfgang Hochleitner and Michael Lankes"
