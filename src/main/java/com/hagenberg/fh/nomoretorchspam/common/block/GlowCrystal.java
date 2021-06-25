@@ -126,7 +126,10 @@ public class GlowCrystal extends Block  {
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Trying to destroy glowlights");
         }
-        if(positions == null ||positions.size() == 0) {NoMoreTorchSpam.LOGGER.error("NO POSITIONS FOUND"); return;}
+        if(positions == null ||positions.size() == 0) {
+            //NoMoreTorchSpam.LOGGER.error("NO POSITIONS FOUND");
+            return;
+        }
         for(BlockPos pos: positions){
             if(pos != null && world.getBlockState(pos).getBlock() instanceof GlowLight){
                 if(world.isClientSide){

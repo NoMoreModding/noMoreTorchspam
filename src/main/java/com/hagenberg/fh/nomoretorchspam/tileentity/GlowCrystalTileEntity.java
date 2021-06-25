@@ -77,7 +77,7 @@ public class GlowCrystalTileEntity extends TileEntity {
             for (BlockPos pos : positions) {
                 posList.add(NBTUtil.writeBlockPos(pos != null ? pos : new BlockPos(0,0,0)));
             }
-            NoMoreTorchSpam.LOGGER.info("Did Saving OP");
+            //NoMoreTorchSpam.LOGGER.info("Did Saving OP");
             nbt.put(pL, posList);
         }
         return nbt;
