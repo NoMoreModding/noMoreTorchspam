@@ -1,0 +1,45 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "hasglowstonedust": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:glowstone_dust"
+          }
+        ]
+      }
+    },
+    "hastherecipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "nomoretorchspam:glow_crystal_1"
+      }
+    },
+    "astackoftorches": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "item": "minecraft:torch",
+            "count": 64
+          }
+        ]
+      }
+    }
+  },
+
+  "requirements": [
+    [
+      "astackoftorches",
+      "hasglowstonedust",
+      "hastherecipe"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "nomoretorchspam:glow_crystal_1"
+    ]
+  }
+}

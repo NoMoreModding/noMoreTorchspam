@@ -1,0 +1,27 @@
+modLoader="javafml"
+loaderVersion="[40,)"
+# Review your options at https://choosealicense.com/
+license="MIT"
+
+[[mods]]
+modId="nomoretorchspam"
+version= "1.18.2-1.0.0"
+displayName="No More Torch Spam"
+logoFile="logo.png"
+credits="Thanks to Wolfgang Hochleitner and Michael Lankes"
+authors="Tobias Filler, Lukas Hartinger"
+description='''
+A small mod that adds the Glow Crystal, a scalable light source. As it is a single block, it prevents the use of tons of torches, improving the look of your Minecraft World. :) '''
+
+[[dependencies.nomoretorchspam]]
+modId="forge"
+mandatory=true
+versionRange="[40,)"
+ordering="NONE"
+side="BOTH"
+[[dependencies.nomoretorchspam]]
+modId="minecraft"
+mandatory=true
+versionRange="[1.18,)"
+ordering="NONE"
+side="BOTH"
