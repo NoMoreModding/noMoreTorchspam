@@ -9,7 +9,7 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class BlockEntityInit {
 
-    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITIES, NoMoreTorchSpam.Mod_ID);
+    public static final DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES = DeferredRegister.create(ForgeRegistries.BLOCK_ENTITY_TYPES, NoMoreTorchSpam.Mod_ID);
 
     public static final RegistryObject<BlockEntityType<GlowCrystalTileEntity>> GLOW_CRYSTAL_TILE_ENTITY =
 

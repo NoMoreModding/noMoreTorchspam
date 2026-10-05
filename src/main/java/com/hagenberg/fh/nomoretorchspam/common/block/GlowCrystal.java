@@ -119,7 +119,7 @@ public class GlowCrystal extends BaseEntityBlock {
                 GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
                 ArrayList<BlockPos> positions = GlowTE.getBlockPositions();
 
-                destroyGlowlights(world, positions);
+                destroyGlowlights(world, positions, pos);
             }
         }
 
@@ -153,7 +153,7 @@ public class GlowCrystal extends BaseEntityBlock {
         }
 
 
-    private void destroyGlowlights(Level world, ArrayList<BlockPos> positions){
+    private void destroyGlowlights(Level world, ArrayList<BlockPos> positions, BlockPos blockPos){
         if (NoMoreTorchSpam.DEBUGMODE) {
             NoMoreTorchSpam.LOGGER.info("Trying to destroy glowlights");
         }
@@ -161,12 +161,13 @@ public class GlowCrystal extends BaseEntityBlock {
             //NoMoreTorchSpam.LOGGER.error("NO POSITIONS FOUND");
             return;
         }
-        for(BlockPos pos: positions){
-            if(pos != null && world.getBlockState(pos).getBlock() instanceof LightBlock){
-                if(world.isClientSide){
-                    NoMoreTorchSpam.LOGGER.info(pos.toShortString());
-                }
-                world.setBlock(pos, Blocks.AIR.defaultBlockState(),3,0);
+
+        for(BlockPos lightPos: positions){
+            if(lightPos != null && world.getBlockState(lightPos).getBlock() instanceof LightBlock){
+//                if(world.isClientSide){
+//                    NoMoreTorchSpam.LOGGER.info(lightPos.toShortString());
+//                }
+                world.setBlock(lightPos, Blocks.AIR.defaultBlockState(),3,0);
             }
         }
     }
@@ -246,7 +247,7 @@ public class GlowCrystal extends BaseEntityBlock {
                 GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
                 ArrayList <BlockPos> positions = GlowTE.getBlockPositions();
 
-                destroyGlowlights(world,positions);
+                destroyGlowlights(world,positions, ctx.getClickedPos());
             }
             return true;
         } else {
