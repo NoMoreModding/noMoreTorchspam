@@ -1,6 +1,6 @@
 {
   "parent": "item/generated",
   "textures": {
-    "layer0": "nomoretorchspam:items/glow_crystal_item_alt"
+    "layer0": "nomoretorchspam:item/glow_crystal_item_alt"
   }
 }

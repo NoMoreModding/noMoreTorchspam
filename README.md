@@ -10,6 +10,10 @@ The glow crystal will save you :3
 
 You can place up to 4 crystals at once to get the maximum light range!
 
+## Requirements
+
+Minecraft 1.20.1 with Minecraft Forge 47.x
+
 ## Crafting
 
-![GitHub Logo](/src/main/resources/crafting.PNG)
+![GitHub Logo](/publication/crafting.PNG)

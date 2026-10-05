@@ -7,7 +7,6 @@ import com.hagenberg.fh.nomoretorchspam.tileentity.GlowCrystalTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -102,19 +101,12 @@ public class GlowCrystal extends BaseEntityBlock {
     }
 
     @Override
-    public void playerWillDestroy(Level world, BlockPos pos, BlockState state, Player player) {
-
-
-        if (NoMoreTorchSpam.DEBUGMODE) {
-            NoMoreTorchSpam.LOGGER.info("Glowcrystal was broken");
-        }
-        if(!world.isClientSide) {
-
+    public void onRemove(BlockState state, Level world, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (!state.is(newState.getBlock()) && !world.isClientSide) {
             BlockEntity te = world.getBlockEntity(pos);
-            //gets the tile Entity and the positions of Glowlights in it
             if (te instanceof GlowCrystalTileEntity) {
                 if (NoMoreTorchSpam.DEBUGMODE) {
-                    NoMoreTorchSpam.LOGGER.info("Getting positions in tile entity");
+                    NoMoreTorchSpam.LOGGER.info("Glowcrystal was removed, cleaning up glowlights");
                 }
                 GlowCrystalTileEntity GlowTE = (GlowCrystalTileEntity) te;
                 ArrayList<BlockPos> positions = GlowTE.getBlockPositions();
@@ -123,8 +115,7 @@ public class GlowCrystal extends BaseEntityBlock {
             }
         }
 
-            super.playerWillDestroy(world, pos, state, player);
-
+        super.onRemove(state, world, pos, newState, movedByPiston);
     }
 
 
@@ -158,15 +149,11 @@ public class GlowCrystal extends BaseEntityBlock {
             NoMoreTorchSpam.LOGGER.info("Trying to destroy glowlights");
         }
         if(positions == null ||positions.size() == 0) {
-            //NoMoreTorchSpam.LOGGER.error("NO POSITIONS FOUND");
             return;
         }
 
         for(BlockPos lightPos: positions){
             if(lightPos != null && world.getBlockState(lightPos).getBlock() instanceof LightBlock){
-//                if(world.isClientSide){
-//                    NoMoreTorchSpam.LOGGER.info(lightPos.toShortString());
-//                }
                 world.setBlock(lightPos, Blocks.AIR.defaultBlockState(),3,0);
             }
         }

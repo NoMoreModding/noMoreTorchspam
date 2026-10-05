@@ -2,8 +2,8 @@
 	"credit": "Made with Blockbench",
 	"texture_size": [64, 64],
 	"textures": {
-		"0": "nomoretorchspam:blocks/glow_crystal",
-		"particle": "nomoretorchspam:blocks/glow_crystal"
+		"0": "nomoretorchspam:block/glow_crystal",
+		"particle": "nomoretorchspam:block/glow_crystal"
 	},
 	"elements": [
 		{

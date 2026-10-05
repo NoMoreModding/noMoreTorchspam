@@ -39,11 +39,6 @@ public class GlowCrystalTileEntity extends BlockEntity {
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-//    @Override
-//    public void onDataPacket(NetworkManager net, SUpdateTileEntityPacket pkt) {
-//        loadingOperation(pkt.getTag());
-//    }
-
     @Override
     protected void saveAdditional(CompoundTag p_187471_) {
         savingOperation(p_187471_,this.positions);
@@ -72,7 +67,6 @@ public class GlowCrystalTileEntity extends BlockEntity {
             for (BlockPos pos : positions) {
                 posList.add(NbtUtils.writeBlockPos(pos != null ? pos : new BlockPos(0,0,0)));
             }
-            //NoMoreTorchSpam.LOGGER.info("Did Saving OP");
             nbt.put(pL, posList);
         }
         return nbt;

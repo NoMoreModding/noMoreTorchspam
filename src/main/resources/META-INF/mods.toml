@@ -1,11 +1,11 @@
 modLoader="javafml"
-loaderVersion="[40,)"
-# Review your options at https://choosealicense.com/
+loaderVersion="[47,)"
 license="MIT"
+# Review your options at https://choosealicense.com/
 
 [[mods]]
 modId="nomoretorchspam"
-version= "1.19.2-1.0.0"
+version="${file.jarVersion}"
 displayName="No More Torch Spam"
 logoFile="logo.png"
 credits="Thanks to Wolfgang Hochleitner and Michael Lankes"
@@ -16,12 +16,13 @@ A small mod that adds the Glow Crystal, a scalable light source. As it is a sing
 [[dependencies.nomoretorchspam]]
 modId="forge"
 mandatory=true
-versionRange="[43,)"
+versionRange="[47,)"
 ordering="NONE"
 side="BOTH"
+
 [[dependencies.nomoretorchspam]]
 modId="minecraft"
 mandatory=true
-versionRange="[1.19,)"
+versionRange="[1.20.1,1.21)"
 ordering="NONE"
 side="BOTH"

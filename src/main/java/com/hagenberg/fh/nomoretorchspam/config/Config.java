@@ -6,10 +6,9 @@ import com.hagenberg.fh.nomoretorchspam.NoMoreTorchSpam;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.fml.common.Mod;
 
-import java.io.File;
 import java.nio.file.Path;
 
-@Mod.EventBusSubscriber
+@Mod.EventBusSubscriber(modid = NoMoreTorchSpam.Mod_ID)
 public class Config {
     private static final ForgeConfigSpec.Builder CONFIG = new ForgeConfigSpec.Builder();
     public static ForgeConfigSpec COMMEN_CONFIG;
