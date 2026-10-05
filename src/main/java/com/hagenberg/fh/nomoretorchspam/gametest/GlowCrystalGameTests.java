@@ -14,7 +14,7 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LightBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.gametest.GameTestHolder;
+import net.neoforged.neoforge.gametest.GameTestHolder;
 
 import java.util.ArrayList;
 
@@ -27,8 +27,8 @@ public class GlowCrystalGameTests {
 
     private static final BlockPos CRYSTAL = new BlockPos(8, 9, 8);
 
-    // Forge resolves the template to <lowercased class name>.<template>, i.e.
-    // nomoretorchspam:glowcrystalgametests.empty -> structures/glowcrystalgametests.empty.nbt
+    // NeoForge resolves the template to <lowercased class name>.<template>, i.e.
+    // nomoretorchspam:glowcrystalgametests.empty -> structure/glowcrystalgametests.empty.nbt
     @GameTest(template = "empty")
     public static void glowlightsAreRemovedOnExplosion(GameTestHelper helper) {
         ServerLevel level = helper.getLevel();

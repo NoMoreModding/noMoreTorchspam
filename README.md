@@ -12,7 +12,7 @@ You can place up to 4 crystals at once to get the maximum light range!
 
 ## Requirements
 
-Minecraft 1.20.1 with Minecraft Forge 47.x
+Minecraft 1.21.1 with NeoForge 21.1.x
 
 ## Crafting
 

@@ -6,7 +6,9 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:glowstone_dust"
+            "items": [
+              "minecraft:glowstone_dust"
+            ]
           }
         ]
       }
@@ -22,8 +24,12 @@
       "conditions": {
         "items": [
           {
-            "item": "minecraft:torch",
-            "count": 64
+            "items": [
+              "minecraft:torch"
+            ],
+            "count": {
+              "min": 64
+            }
           }
         ]
       }

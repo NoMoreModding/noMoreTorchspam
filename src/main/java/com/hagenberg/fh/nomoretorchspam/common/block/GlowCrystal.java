@@ -4,6 +4,7 @@ import com.hagenberg.fh.nomoretorchspam.NoMoreTorchSpam;
 import com.hagenberg.fh.nomoretorchspam.config.Config;
 import com.hagenberg.fh.nomoretorchspam.tileentity.GlowCrystalTileEntity;
 
+import com.mojang.serialization.MapCodec;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.entity.LivingEntity;
@@ -21,13 +22,14 @@ import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.pathfinder.PathComputationType;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.ArrayList;
 
 // This is the block class of GlowCrystal
 
 public class GlowCrystal extends BaseEntityBlock {
+    public static final MapCodec<GlowCrystal> CODEC = simpleCodec(GlowCrystal::new);
 
     //VoxelShapes :)
     //One
@@ -50,18 +52,14 @@ public class GlowCrystal extends BaseEntityBlock {
     protected static final VoxelShape Z_FOUR_AABB = Block.box(2.0D, 0.0D, 0.0D, 15.0D, 13.0D, 16.0D);
     protected static final VoxelShape X_FOUR_AABB = Block.box(0.0D, 2.0D, 0.0D, 16.0D, 15.0D, 13.0D);
 
-    private final int HEIGHTDIFF = Config.HEIGHTDIFF.get();
-    private final int RADIUSDIFF = Config.RADIUSDIFF.get();
-    private final int AMOUNTOFDISCS = Config.AMOUNTOFDISCS.get();
-    private final int DISTANCE = Config.DISTANCE.get();
-
-
     //Blockstate that provides the number of crystals in the block
     public static final IntegerProperty CRYSTALS = IntegerProperty.create("crystals",1,4);
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
-    public BlockEntity newBlockEntity(BlockPos p_152386_, BlockState p_152387_) {
-        return new GlowCrystalTileEntity(p_152386_,p_152387_);
+    @Nullable
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new GlowCrystalTileEntity(pos,state);
     }
 
     public GlowCrystal(Properties properties) {
@@ -70,7 +68,12 @@ public class GlowCrystal extends BaseEntityBlock {
     }
 
     @Override
-    public RenderShape getRenderShape(BlockState p_49232_) {
+    public MapCodec<? extends GlowCrystal> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public RenderShape getRenderShape(BlockState state) {
         return RenderShape.MODEL;
     }
 
@@ -83,7 +86,7 @@ public class GlowCrystal extends BaseEntityBlock {
         }
         if(!world.isClientSide){
             //saves the positions of the placed glowlights
-            ArrayList <BlockPos> positions = createGlowlights(world, pos, RADIUSDIFF * state.getValue(CRYSTALS), AMOUNTOFDISCS);
+            ArrayList <BlockPos> positions = createGlowlights(world, pos, Config.RADIUSDIFF * state.getValue(CRYSTALS), Config.AMOUNTOFDISCS);
 
 
             //gets the tile Entity and sets the positions of Glowlights in it
@@ -129,8 +132,8 @@ public class GlowCrystal extends BaseEntityBlock {
         }
         for(int z = -radius; z <= radius; z++){
             for(int x = - radius; x <= radius; x++){
-                for(int y = center.getY()-HEIGHTDIFF < 0 ? 0 : -HEIGHTDIFF; y < height * HEIGHTDIFF; y += HEIGHTDIFF){
-                    if(x*x+z*z < calcRadius && z % DISTANCE == 0 && x % DISTANCE == 0){
+                for(int y = center.getY()-Config.HEIGHTDIFF < 0 ? 0 : -Config.HEIGHTDIFF; y < height * Config.HEIGHTDIFF; y += Config.HEIGHTDIFF){
+                    if(x*x+z*z < calcRadius && z % Config.DISTANCE == 0 && x % Config.DISTANCE == 0){
                         BlockPos pos = new BlockPos(x+center.getX(),y+center.getY(),z+center.getZ());
                         if(world.getBlockState(pos).getBlock() instanceof AirBlock) {
                             world.setBlock(pos, Blocks.LIGHT.defaultBlockState(), 3,0);
@@ -170,7 +173,7 @@ public class GlowCrystal extends BaseEntityBlock {
 
     @SuppressWarnings( "deprecation" )
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter p_60556_, BlockPos p_60557_, CollisionContext p_60558_) {
+    public VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         Direction.Axis axis = state.getValue(FACING).getAxis();
 
         switch(state.getValue(CRYSTALS)) {
@@ -243,6 +246,7 @@ public class GlowCrystal extends BaseEntityBlock {
     }
 
     @Nullable
+    @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         Direction direction = ctx.getClickedFace();
         BlockState blockstate = ctx.getLevel().getBlockState(ctx.getClickedPos());
@@ -254,19 +258,19 @@ public class GlowCrystal extends BaseEntityBlock {
         }
     }
 
-    @SuppressWarnings( "deprecation" )
-    public boolean isPathfindable(BlockState p_56104_, BlockGetter p_56105_, BlockPos p_56106_, PathComputationType p_56107_) {
+    @Override
+    public boolean isPathfindable(BlockState state, PathComputationType type) {
         return false;
     }
 
-    @SuppressWarnings( "deprecation" )
-    public BlockState rotate(BlockState p_185499_1_, Rotation p_185499_2_) {
-        return p_185499_1_.setValue(FACING, p_185499_2_.rotate(p_185499_1_.getValue(FACING)));
+    @Override
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
-    @SuppressWarnings( "deprecation" )
-    public BlockState mirror(BlockState p_185471_1_, Mirror p_185471_2_) {
-        return p_185471_1_.setValue(FACING, p_185471_2_.mirror(p_185471_1_.getValue(FACING)));
+    @Override
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
     }
 
 }

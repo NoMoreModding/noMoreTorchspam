@@ -1,31 +1,31 @@
 package com.hagenberg.fh.nomoretorchspam.core.init;
 
 import com.hagenberg.fh.nomoretorchspam.NoMoreTorchSpam;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.item.Item;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.registries.DeferredRegister;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.RegistryObject;
+import net.neoforged.bus.api.SubscribeEvent;
+import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.registries.DeferredHolder;
+import net.neoforged.neoforge.registries.DeferredRegister;
 
-@Mod.EventBusSubscriber(modid = NoMoreTorchSpam.Mod_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
+@EventBusSubscriber(modid = NoMoreTorchSpam.Mod_ID, bus = EventBusSubscriber.Bus.MOD)
 public class ItemInit {
 
     public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, NoMoreTorchSpam.Mod_ID);
+            DeferredRegister.create(Registries.ITEM, NoMoreTorchSpam.Mod_ID);
 
     // Block Items
-    public static final RegistryObject<BlockItem> GLOW_CRYSTAL =
+    public static final DeferredHolder<Item, BlockItem> GLOW_CRYSTAL =
             ITEMS.register("glow_crystal", () -> new BlockItem(BlockInit.GLOW_CRYSTAL.get(),
                     new Item.Properties()));
 
     @SubscribeEvent
     public static void addToCreativeTabs(BuildCreativeModeTabContentsEvent event) {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS) {
-            event.accept(GLOW_CRYSTAL);
+            event.accept(GLOW_CRYSTAL.get());
         }
     }
 }
